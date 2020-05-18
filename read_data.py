@@ -70,7 +70,7 @@ def main():
 
                 file_gem = "{0}/Samples/{1}_{2}{3:02d}/dm*".format(folder, exp, year, month)
 
-                file_list = glob.glob(file_gem)
+                file_list = glob(file_gem)
                 print(file_list)
                 file_list.sort()
 
