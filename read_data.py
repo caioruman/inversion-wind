@@ -84,8 +84,24 @@ def main():
                     print(f)
 
                     gz = r.variables['GZ'][:]
+                    # [...0.982782, 0.988501, 0.994254, 0.997123, 1]
+                    # [...,gz_uu, gz_tt, gz_uu, gz_tt, surface]
+
+                    gz_0 = gz[:,-1,:,:]
+                    # removing the last level (surface)
+                    gz = gz[:,:-1,:,:]
+
+                    # spliting between tt and uu levels
+                    gz_tt = gz[:,::2,:,:]
+
+                    gz_uu = gz[:,1::2,:,:]
+
                     tt = r.variables['TT'][:]
+                    # [..., 0.988501, 0.997123, 1.5]
+
                     uu = r.variables['UU'][:]
+                    # [..., 0.982782, 0.994254, 10m]
+
                     vv = r.variables['VV'][:]
                     hu = r.variables['HU'][:] # specific humidity
                     uv = np.sqrt(np.power(uu,2) + np.power(vv,2))
@@ -99,6 +115,8 @@ def main():
                     print(uv[0,:,10,10])
                     print(tt[0,:,10,10])
 
+                    print(gz_tt[0,:,10,10])
+                    print(gz_uu[0,:,10,10])
 
                     sys.exit()
 
