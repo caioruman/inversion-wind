@@ -81,6 +81,8 @@ def main():
 
                     r = RPN(f)
                     
+                    print(f)
+
                     gz = r.variables['GZ'][:]
                     tt = r.variables['TT'][:]
                     uu = r.variables['UU'][:]
@@ -88,10 +90,15 @@ def main():
                     hu = r.variables['HU'][:] # specific humidity
                     uv = np.sqrt(np.power(uu,2) + np.power(vv,2))
 
-                    print(gz[:,10,10])
-                    print(hu[:,10,10])
-                    print(uv[:,10,10])
-                    print(tt[:,10,10])
+                    print(gz.shape)
+                    print(tt.shape)
+                    print(uu.shape)
+                    print(hu.shape)
+                    print(gz[0,:,10,10])
+                    print(hu[0,:,10,10])
+                    print(uv[0,:,10,10])
+                    print(tt[0,:,10,10])
+
 
                     sys.exit()
 
