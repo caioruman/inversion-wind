@@ -98,8 +98,8 @@ def main():
 
                     tt = r.variables['TT'][:]
                     # [..., 0.988501, 0.997123, 1.5]
-                    tt_0 = tt[:,-1,:,:]
-                    tt = tt[:,:-1,:,:]
+                    tt_0 = tt[:,-1,:,:]+273.15
+                    tt = tt[:,:-1,:,:]+273.15
 
                     uu = r.variables['UU'][:]
                     vv = r.variables['VV'][:]
@@ -131,7 +131,7 @@ def main():
                     # at sea level, z1 = 0 and p1 = mslp
                     # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
                     # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
-                    p = mslp/(np.exp(gz*g/(Rd*tv)))
+                    p = mslp/(np.exp(gz_tt*g/(Rd*tv)))
 
                     print(tt[0,:,10,10])
                     print(tv[0,:,10,10])
