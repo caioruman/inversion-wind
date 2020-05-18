@@ -131,7 +131,7 @@ def main():
                     # at sea level, z1 = 0 and p1 = mslp
                     # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
                     # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
-                    p = mslp/(np.exp(gz*g/(Rd*tv)))
+                    p = mslp/(np.exp(gz_tt*g/(Rd*tv)))
 
                     print(tt[0,:,10,10])
                     print(tv[0,:,10,10])
