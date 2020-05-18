@@ -86,7 +86,7 @@ def main():
                     uu = r.variables['UU'][:]
                     vv = r.variables['VV'][:]
                     hu = r.variables['HU'][:] # specific humidity
-                    uv = np.sqrt(np.pow(uu,2) + np.pow(vv,2))
+                    uv = np.sqrt(np.power(uu,2) + np.power(vv,2))
 
                     print(gz[:,10,10])
                     print(hu[:,10,10])
