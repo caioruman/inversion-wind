@@ -98,8 +98,8 @@ def main():
 
                     tt = r.variables['TT'][:]
                     # [..., 0.988501, 0.997123, 1.5]
-                    tt_0 = tt[:,-1,:,:]
-                    tt = tt[:,:-1,:,:]
+                    tt_0 = tt[:,-1,:,:]+273.15
+                    tt = tt[:,:-1,:,:]+273.15
 
                     uu = r.variables['UU'][:]
                     vv = r.variables['VV'][:]
