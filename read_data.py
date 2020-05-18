@@ -83,6 +83,7 @@ def main():
                     
                     print(f)
 
+                    # position of elements: (time, z, x, y)
                     gz = r.variables['GZ'][:]
                     # [...0.982782, 0.988501, 0.994254, 0.997123, 1]
                     # [...,gz_uu, gz_tt, gz_uu, gz_tt, surface]
@@ -91,7 +92,7 @@ def main():
                     # removing the last level (surface)
                     gz = gz[:,:-1,:,:]
 
-                    # spliting between tt and uu levels
+                    # spliting between tt/hu and uu levels
                     gz_tt = gz[:,::2,:,:]
 
                     gz_uu = gz[:,1::2,:,:]
