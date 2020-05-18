@@ -138,6 +138,7 @@ def main():
                     print(p[0,:,10,10])
 
                     r.close()
+                    sys.exit()
 
 
 
