@@ -93,37 +93,33 @@ def main():
                     gz = gz[:,:-1,:,:]
 
                     # spliting between tt/hu and uu levels
-                    gz_tt = gz[:,::2,:,:]
-
-                    gz_uu = gz[:,1::2,:,:]
+                    gz_tt = gz[:,1::2,:,:]
+                    gz_uu = gz[:,::2,:,:]
 
                     tt = r.variables['TT'][:]
                     # [..., 0.988501, 0.997123, 1.5]
+                    tt_0 = tt[:,-1,:,:]
+                    tt = tt[:,:-1,:,:]
 
                     uu = r.variables['UU'][:]
+                    vv = r.variables['VV'][:]
                     # [..., 0.982782, 0.994254, 10m]
 
-                    vv = r.variables['VV'][:]
                     hu = r.variables['HU'][:] # specific humidity
+                    hu_0 = hu[:,-1,:,:]
+                    hu = hu[:,:-1,:,:]
+
                     uv = np.sqrt(np.power(uu,2) + np.power(vv,2))
+                    uv_0 = uv[:,-1,:,:]
+                    uv = uv[:,:-1,:,:]
 
-                    print(gz.shape)
-                    print(tt.shape)
-                    print(uu.shape)
-                    print(hu.shape)
-                    print(gz[0,:,10,10])
-                    print(hu[0,:,10,10])
-                    print(uv[0,:,10,10])
-                    print(tt[0,:,10,10])
+                    uu_0 = uu[:,-1,:,:]
+                    uu = uu[:,:-1,:,:]
 
-                    print(gz_tt[0,:,10,10])
-                    print(gz_uu[0,:,10,10])
-
-                    sys.exit()
+                    vv_0 = vv[:,-1,:,:]
+                    vv = vv[:,:-1,:,:]
 
                     mslp = r.variables['PN'][:]
-
-                    # Need to check the position of the 'surface level'
 
                     # Virtual Temperature
                     # Tv ~ T*(1 + 0.61*w)
@@ -137,7 +133,9 @@ def main():
                     # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
                     p = mslp/(np.exp(gz*g/(Rd*tv)))
 
-                    
+                    print(tt[0,:,10,10])
+                    print(tv[0,:,10,10])
+                    print(p[0,:,10,10])
 
                     r.close()
 
