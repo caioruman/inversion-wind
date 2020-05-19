@@ -31,7 +31,7 @@ Estimate the pressure for each level;
 Estimate the density for each level;
 Calculate the Inversion Strength (deltaT) at 40m
 
-This version will try to do the calculation over he entire grid
+This version gets a station point and do the calculations.
 
 Saving the results in CSV (if doing for only one point) or Netcdf (if for the whole domain)
 
