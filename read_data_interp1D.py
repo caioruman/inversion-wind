@@ -139,11 +139,10 @@ def main():
             vv = vv[:,:-1,:,:]
 
             mslp = r.variables['PN'][:]
+            aux = r.variables['PN']
+            
 
             # get the data. see sasha code
-
-            lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
-
             if ini:
               ini = False
               data_uu = uu
@@ -152,7 +151,12 @@ def main():
               data_tt = tt
               data_hu = hu
               data_mslp = mslp
-              data_gz = gz
+              data_gz_tt = gz_tt
+              data_gz_uu = gz_uu
+
+              dates = [str(d) for d in aux.sorted_dates]
+
+              lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
             else:
               data_uu = np.vstack( (data_uu, uu) )
               data_vv = np.vstack( (data_vv, vv) )
@@ -160,42 +164,41 @@ def main():
               data_tt = np.vstack( (data_tt, tt) )
               data_hu = np.vstack( (data_hu, hu) )
               data_mslp = np.vstack( (data_mslp, mslp) )
-              data_gz = np.vstack( (data_gz, gz) )
+              data_gz_tt = np.vstack( (data_gz_tt, gz_tt) )
+              data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
 
-              print(data_gz.shape)
+              dates += [str(d) for d in aux.sorted_dates]
+
+              print(data_gz_tt.shape)
+              print(dates)
               sys.exit()
 
         
         for lat, lon, name in zip(lats, lons, stnames):
           i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
 
-                    
-                    
-
-                    
-
           # Virtual Temperature
           # Tv ~ T*(1 + 0.61*w)
           # Tv ~ T*(1 + 0.61*(hu/(1-hu)))
-          Tv = tt*(1 + 0.61*(hu/(1-hu)))
-          Tv_0 = tt_0*(1 + 0.61*(hu_0/(1-hu_0)))
+          Tv = data_tt[:,:,i,j]*(1 + 0.61*(data_hu[:,:,i,j]/(1-data_hu[:,:,i,j])))
+          #Tv_0 = tt_0*(1 + 0.61*(hu_0/(1-hu_0)))
 
-            # Using the hypsometric equation
-            # Z2 - Z1 = (Rd*Tv)*ln(p1/p2)/g
-            # at sea level, z1 = 0 and p1 = mslp
-            # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
-            # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
-          p = mslp/(np.exp(gz_tt*g/(Rd*Tv)))
+          # Using the hypsometric equation
+          # Z2 - Z1 = (Rd*Tv)*ln(p1/p2)/g
+          # at sea level, z1 = 0 and p1 = mslp
+          # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
+          # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
+          p = data_mslp[:,:,i,j]/(np.exp(data_gz_tt[:,:,i,j]*g/(Rd*Tv)))
 
             # estimating the air density
           pho = p/(Rd*Tv)
-          pho_0 = mslp/(Rd*Tv_0)
+          #pho_0 = mslp/(Rd*Tv_0)
 
             # interpolate values to nice levels
 
-          print(tt[0,:,10,10])
-          print(Tv[0,:,10,10])
-          print(p[0,:,10,10])
+          #print(tt[0,:,10,10])
+          #print(Tv[0,:,10,10])
+          #print(p[0,:,10,10])
 
             
           sys.exit()
