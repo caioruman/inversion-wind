@@ -191,11 +191,33 @@ def main():
           # interpolate values to nice levels
           #for dd, i in enumerate(dates):
 
-          tt_i = interpData(data_gz_tt[:,:,i,j], height, data_tt[:,:,i,j])
+          """
+          Start checking from here tomorrow
+          """
+
+          tt_i = []
+          uv_i = []
+          for t, dd in enumerate(dates, 0):
+            tt_i.append(interpData(data_gz_tt[t,:,i,j], height, data_tt[t,:,i,j]))
+            uv_i.append(interpData(data_gz_uu[t,:,i,j], height, data_uv[t,:,i,j]))
+
+            # add the other variables in the next version
+
+          #tt_i = interpData(data_gz_tt[:,:,i,j], height, data_tt[:,:,i,j])
 
           print(tt_i[0])
           print(data_tt[0,:,i,j])
 
+          df1 = pd.DataFrame(data=tt_i, columns=height)
+          
+          df1 = df1.assign(Dates=dates)
+          
+          # change the path
+          df1.to_csv("{0}/CSV_RCP/{5}/{4}/{1}_{2}{3:02d}_neg.csv".format(folder, name, year, month, year, exp))
+
+          df1 = pd.DataFrame(data=uv_i, columns=height)
+          df1 = df1.assign(Dates=dates)
+          df1 = df1.to_csv()
             
           sys.exit()
 
