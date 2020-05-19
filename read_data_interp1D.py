@@ -141,8 +141,6 @@ def main():
             mslp = r.variables['PN'][:]
             aux = r.variables['PN']
             
-
-            # get the data. see sasha code
             if ini:
               ini = False
               data_uu = uu
@@ -168,12 +166,8 @@ def main():
               data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
 
               dates += [str(d) for d in aux.sorted_dates]
-
-              print(data_gz_tt.shape)
-              print(dates)
-              sys.exit()
-
         
+        print("Initiating calculations on pre-selected locations")
         for lat, lon, name in zip(lats, lons, stnames):
           i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
 
@@ -194,11 +188,13 @@ def main():
           pho = p/(Rd*Tv)
           #pho_0 = mslp/(Rd*Tv_0)
 
-            # interpolate values to nice levels
+          # interpolate values to nice levels
+          #for dd, i in enumerate(dates):
 
-          #print(tt[0,:,10,10])
-          #print(Tv[0,:,10,10])
-          #print(p[0,:,10,10])
+          tt_i = interpData(data_gz_tt[:,:,i,j], height, data_tt[:,:,i,j])
+
+          print(tt_i[0])
+          print(data_tt[0,:,i,j])
 
             
           sys.exit()
@@ -227,7 +223,7 @@ def geo_idx(dd, dd_array, type="lat"):
 
   return geo_idx
 
-def interpPressure(levels, new_levels, data, interp='linear'):
+def interpData(levels, new_levels, data, interp='linear'):
   """
     Interpolate data to custom levels
     levels: Original level
