@@ -11,7 +11,7 @@
 #;70398;70398__Annette_Island,_AK_PANT;latitude;55.03;longitude;-131.56
 71043;71043__Norman_Wells_Ua,_NT_YVQ;latitude;65.27;longitude;-126.75;altitude;94
 71081;71081__Hall_Beach,_NT_YUX;latitude;68.76;longitude;-81.21;altitude;6
-71082;71082__Alert,_NT_WLT;latitude;82.50;longitude;-62.33;altitude;76
+#;71082;71082__Alert,_NT_WLT;latitude;82.50;longitude;-62.33;altitude;76
 #;71109;71109__Port_Hardy,_BC_YZT;latitude;50.68;longitude;-127.36
 #;71119;71119__Edmonton_Stony_Plain,_AB_WSE;latitude;53.53;longitude;-114.10
 #;71811;71811__Sept-Iles,_QB_YZV;latitude;50.21;longitude;-66.25
@@ -20,12 +20,12 @@
 #;71823;71823__La_Grande_Iv,_QB_YAH;latitude;53.75;longitude;-73.66
 #;71867;71867__The_Pas,_MB_YQD;latitude;53.95;longitude;-101.09
 71906;71906__Kuujjuaq,_QB_YVP;latitude;58.11;longitude;-68.41;altitude;60
-71907;71907__Inukjuak,_QB_WPH;latitude;58.45;longitude;-78.11;altitude;6
+#;71907;71907__Inukjuak,_QB_WPH;latitude;58.45;longitude;-78.11;altitude;6
 #;71913;71913__Churchill,_MB_YYQ;latitude;58.73;longitude;-94.08
-71917;71917__Eureka,_NT_WEU;latitude;79.98;longitude;-85.93;altitude;10
-71925;71925__Cambridge_Bay,_NT_YCB;latitude;69.12;longitude;-105.05;altitude;26
-71926;71926__Baker_Lake,_NT_YBK;latitude;64.30;longitude;-96.00;altitude;50
-71934;71934__Fort_Smith,_NT_YSM;latitude;60.02;longitude;-111.93;altitude;203
+#;71917;71917__Eureka,_NT_WEU;latitude;79.98;longitude;-85.93;altitude;10
+#;71925;71925__Cambridge_Bay,_NT_YCB;latitude;69.12;longitude;-105.05;altitude;26
+#;71926;71926__Baker_Lake,_NT_YBK;latitude;64.30;longitude;-96.00;altitude;50
+#;71934;71934__Fort_Smith,_NT_YSM;latitude;60.02;longitude;-111.93;altitude;203
 #;71945;71945__Fort_Nelson,_BC_YYE;latitude;58.83;longitude;-122.59
 71957;71957__Inuvik,_NT_YEV;latitude;68.30;longitude;-133.52;altitude;103
 #;72797;72797__Quillayute,_WA_UIL;latitude;47.95;longitude;-124.55

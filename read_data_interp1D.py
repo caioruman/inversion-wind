@@ -42,175 +42,247 @@ for later:
 '''
 
 def main():
-    datai = 1989
-    dataf = 1990
+  datai = 1989
+  dataf = 1990
 
     # constants
-    Rd = 287  # Gas constant of dry air
-    g = 9.80665 # gravity
+  Rd = 287  # Gas constant of dry air
+  g = 9.80665 # gravity
 
-    # simulation
-    exp = "cPanCan_011deg_675x540_SPN_ERA5_90lvl"
-    #exp = "cPanCan_011deg_675x540_SPN_ERA5_80lvl"
-    #exp = "cPanCan_011deg_675x540_SPN_CanESM2_histo_r1i1p1_90lvl"
+  lats = []
+  lons = []
+  stnames = []
 
-    folder = "/home/cruman/projects/rrg-sushama-ab/cruman/storage_model/Output/{0}".format(exp)
+  stations = open('stations.txt', 'r')
+  for line in stations:
+    aa = line.replace("\n", '').split(';')
+    if (aa[0] != "#"):      
+      lats.append(float(aa[3]))
+      lons.append(float(aa[5]))
+      stnames.append(aa[1].replace(',',"_"))
 
-    # Sounding Data
-    #sounding_file = "/home/cruman/project/cruman/Scripts/soundings/inv_list_DJF.dat"
+  stations.close()
+  # simulation
+  exp = "cPanCan_011deg_675x540_SPN_ERA5_90lvl"
+  #exp = "cPanCan_011deg_675x540_SPN_ERA5_80lvl"
+  #exp = "cPanCan_011deg_675x540_SPN_CanESM2_histo_r1i1p1_90lvl"
 
-    period = ["DJF", "JJA", 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
-    period = ["DJF", "JJA", "SON", "MAM"] #, "JFM", "JAS"]
-    period = ["DJF", "JJA"]
-    period = ["DJF"]
+  folder = "/home/cruman/projects/rrg-sushama-ab/cruman/storage_model/Output/{0}".format(exp)
 
-    height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
+  # Sounding Data
+  #sounding_file = "/home/cruman/project/cruman/Scripts/soundings/inv_list_DJF.dat"
 
-    for per in period:
+  period = ["DJF", "JJA", 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
+  period = ["DJF", "JJA", "SON", "MAM"] #, "JFM", "JAS"]
+  period = ["DJF", "JJA"]
+  period = ["DJF"]
 
-        #read file
-        month_range = getMonths(per)
+  height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
 
-        for month in month_range:
-            for year in range(datai, dataf+1):
-                print(month, year)
+  for per in period:
 
-                file_gem = "{0}/Samples/{1}_{2}{3:02d}/dm*".format(folder, exp, year, month)
+    #read file
+    month_range = getMonths(per)
 
-                file_list = glob(file_gem)
-                file_list.sort()
+    for month in month_range:
+      for year in range(datai, dataf+1):  
+        print(month, year)
 
-                for f in file_list:
+        file_gem = "{0}/Samples/{1}_{2}{3:02d}/dm*".format(folder, exp, year, month)
 
-                    r = RPN(f)
+        file_list = glob(file_gem)
+        file_list.sort()
+
+        ini = True
+        for f in file_list:
+
+          with RPN(f) as r:
+
+            # position of elements: (time, z, x, y)
+            # top altitude is the 0 array index
+            gz = r.variables['GZ'][:]
+            # [...0.982782, 0.988501, 0.994254, 0.997123, 1]
+            # [...,gz_uu, gz_tt, gz_uu, gz_tt, surface]
+
+            tt = r.variables['TT'][:]
+            # [..., 0.988501, 0.997123, 1.5]
+
+            uu = r.variables['UU'][:]
+            vv = r.variables['VV'][:]
+            # [..., 0.982782, 0.994254, 10m]
+
+            hu = r.variables['HU'][:] # specific humidity
+
+            gz_0 = gz[:,-1,:,:]
+
+            # removing the last level (surface)
+            gz = gz[:,:-1,:,:]
+
+            # spliting between tt/hu and uu levels
+            gz_tt = gz[:,1::2,:,:]
+            gz_uu = gz[:,::2,:,:]
+
+            tt_0 = tt[:,-1,:,:]+273.15
+            tt = tt[:,:-1,:,:]+273.15
+
+            hu_0 = hu[:,-1,:,:]
+            hu = hu[:,:-1,:,:]
+
+            uv = np.sqrt(np.power(uu,2) + np.power(vv,2))
+            uv_0 = uv[:,-1,:,:]
+            uv = uv[:,:-1,:,:]
+
+            uu_0 = uu[:,-1,:,:]
+            uu = uu[:,:-1,:,:]
+
+            vv_0 = vv[:,-1,:,:]
+            vv = vv[:,:-1,:,:]
+
+            mslp = r.variables['PN'][:]
+
+            # get the data. see sasha code
+
+            lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
+
+            if ini:
+              ini = False
+              data_uu = uu
+              data_vv = vv
+              data_uv = uv
+              data_tt = tt
+              data_hu = hu
+              data_mslp = mslp
+              data_gz = gz
+            else:
+              data_uu = np.vstack( (data_uu, uu) )
+              data_vv = np.vstack( (data_vv, vv) )
+              data_uv = np.vstack( (data_uv, uv) )
+              data_tt = np.vstack( (data_tt, tt) )
+              data_hu = np.vstack( (data_hu, hu) )
+              data_mslp = np.vstack( (data_mslp, mslp) )
+              data_gz = np.vstack( (data_gz, gz) )
+
+              print(data_gz.shape)
+              sys.exit()
+
+        
+        for lat, lon, name in zip(lats, lons, stnames):
+          i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
+
                     
-                    print(f)
+                    
 
-                    # position of elements: (time, z, x, y)
-                    # top altitude is the 0 array index
-                    gz = r.variables['GZ'][:]
-                    # [...0.982782, 0.988501, 0.994254, 0.997123, 1]
-                    # [...,gz_uu, gz_tt, gz_uu, gz_tt, surface]
+                    
 
-                    gz_0 = gz[:,-1,:,:]
-                    # removing the last level (surface)
-                    gz = gz[:,:-1,:,:]
+          # Virtual Temperature
+          # Tv ~ T*(1 + 0.61*w)
+          # Tv ~ T*(1 + 0.61*(hu/(1-hu)))
+          Tv = tt*(1 + 0.61*(hu/(1-hu)))
+          Tv_0 = tt_0*(1 + 0.61*(hu_0/(1-hu_0)))
 
-                    # spliting between tt/hu and uu levels
-                    gz_tt = gz[:,1::2,:,:]
-                    gz_uu = gz[:,::2,:,:]
+            # Using the hypsometric equation
+            # Z2 - Z1 = (Rd*Tv)*ln(p1/p2)/g
+            # at sea level, z1 = 0 and p1 = mslp
+            # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
+            # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
+          p = mslp/(np.exp(gz_tt*g/(Rd*Tv)))
 
-                    tt = r.variables['TT'][:]
-                    # [..., 0.988501, 0.997123, 1.5]
-                    tt_0 = tt[:,-1,:,:]+273.15
-                    tt = tt[:,:-1,:,:]+273.15
+            # estimating the air density
+          pho = p/(Rd*Tv)
+          pho_0 = mslp/(Rd*Tv_0)
 
-                    uu = r.variables['UU'][:]
-                    vv = r.variables['VV'][:]
-                    # [..., 0.982782, 0.994254, 10m]
+            # interpolate values to nice levels
 
-                    hu = r.variables['HU'][:] # specific humidity
-                    hu_0 = hu[:,-1,:,:]
-                    hu = hu[:,:-1,:,:]
+          print(tt[0,:,10,10])
+          print(Tv[0,:,10,10])
+          print(p[0,:,10,10])
 
-                    uv = np.sqrt(np.power(uu,2) + np.power(vv,2))
-                    uv_0 = uv[:,-1,:,:]
-                    uv = uv[:,:-1,:,:]
+            
+          sys.exit()
 
-                    uu_0 = uu[:,-1,:,:]
-                    uu = uu[:,:-1,:,:]
+def geo_idx(dd, dd_array, type="lat"):
+  '''
+    search for nearest decimal degree in an array of decimal degrees and return the index.
+    np.argmin returns the indices of minium value along an axis.
+    so subtract dd from all values in dd_array, take absolute value and find index of minimum.
+    
+    Differentiate between 2-D and 1-D lat/lon arrays.
+    for 2-D arrays, should receive values in this format: dd=[lat, lon], dd_array=[lats2d,lons2d]
+  '''
+  if type == "lon" and len(dd_array.shape) == 1:
+    dd_array = np.where(dd_array <= 180, dd_array, dd_array - 360)
 
-                    vv_0 = vv[:,-1,:,:]
-                    vv = vv[:,:-1,:,:]
+  if (len(dd_array.shape) < 2):
+    geo_idx = (np.abs(dd_array - dd)).argmin()
+  else:
+    if (dd_array[1] < 0).any():
+      dd_array[1] = np.where(dd_array[1] <= 180, dd_array[1], dd_array[1] - 360)
 
-                    mslp = r.variables['PN'][:]
+    a = abs( dd_array[0]-dd[0] ) + abs(  np.where(dd_array[1] <= 180, dd_array[1], dd_array[1] - 360) - dd[1] )
+    i,j = np.unravel_index(a.argmin(), a.shape)
+    geo_idx = [i,j]
 
-                    # Virtual Temperature
-                    # Tv ~ T*(1 + 0.61*w)
-                    # Tv ~ T*(1 + 0.61*(hu/(1-hu)))
-                    Tv = tt*(1 + 0.61*(hu/(1-hu)))
-                    Tv_0 = tt_0*(1 + 0.61*(hu_0/(1-hu_0)))
-
-                    # Using the hypsometric equation
-                    # Z2 - Z1 = (Rd*Tv)*ln(p1/p2)/g
-                    # at sea level, z1 = 0 and p1 = mslp
-                    # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
-                    # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
-                    p = mslp/(np.exp(gz_tt*g/(Rd*Tv)))
-
-                    # estimating the air density
-                    pho = p/(Rd*Tv)
-                    pho_0 = mslp/(Rd*Tv_0)
-
-                    # interpolate values to nice levels
-
-                    print(tt[0,:,10,10])
-                    print(Tv[0,:,10,10])
-                    print(p[0,:,10,10])
-
-                    r.close()
-                    sys.exit()
-
+  return geo_idx
 
 def interpPressure(levels, new_levels, data, interp='linear'):
-    """
+  """
     Interpolate data to custom levels
     levels: Original level
     custom_levels: new level
     data: Original variable to be interpolated to custom pressure level
     returns: new_val, the original variable interpolated.
-    """
-    new_val = np.zeros_like(new_levels)
+  """
+  new_val = np.zeros_like(new_levels)
 
-    f = interpolate.interp1d(levels, data, kind=interp)
+  f = interpolate.interp1d(levels, data, kind=interp)
 
-    for level in range(new_val.shape[0]):
-        new_val[level] = f(new_levels[level])
+  for level in range(new_val.shape[0]):
+    new_val[level] = f(new_levels[level])
 
-    return new_val
+  return new_val
 
 
 def getMonths(period):
 
-    # 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec'
-    if period == "DJF":
-        months = [12, 1, 2]
-    elif period == "JJA":
-        months = [6, 7, 8]
-    elif period == "MAM":
-        months = [3, 4, 5]
-    elif period == "SON":
-        months = [9, 10, 11]
-    elif period == "JFM":
-        months = [1, 2, 3]
-    elif period == "JAS":
-        months = [7, 8, 9]
-    elif period == "Jan":
-        months = [1]
-    elif period == "Feb":
-        months = [2]
-    elif period == "Mar":
-        months = [3]
-    elif period == "Apr":
-        months = [4]
-    elif period == "May":
-        months = [5]
-    elif period == "Jun":
-        months = [6]
-    elif period == "Jul":
-        months = [7]
-    elif period == "Aug":
-        months = [8]
-    elif period == "Sep":
-        months = [9]
-    elif period == "Oct":
-        months = [10]
-    elif period == "Nov":
-        months = [11]
-    elif period == "Dec":
-        months = [12]
+  # 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec'
+  if period == "DJF":
+    months = [12, 1, 2]
+  elif period == "JJA":
+    months = [6, 7, 8]
+  elif period == "MAM":
+    months = [3, 4, 5]
+  elif period == "SON":
+    months = [9, 10, 11]
+  elif period == "JFM":
+    months = [1, 2, 3]
+  elif period == "JAS":
+    months = [7, 8, 9]
+  elif period == "Jan":
+    months = [1]
+  elif period == "Feb":
+    months = [2]
+  elif period == "Mar":
+    months = [3]
+  elif period == "Apr":
+    months = [4]
+  elif period == "May":
+    months = [5]
+  elif period == "Jun":
+    months = [6]
+  elif period == "Jul":
+    months = [7]
+  elif period == "Aug":
+    months = [8]
+  elif period == "Sep":
+    months = [9]
+  elif period == "Oct":
+    months = [10]
+  elif period == "Nov":
+    months = [11]
+  elif period == "Dec":
+    months = [12]
 
-    return months
+  return months
 
 if __name__ == "__main__":
     main()
