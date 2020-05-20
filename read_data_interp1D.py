@@ -94,7 +94,7 @@ def main():
         file_list.sort()
 
         ini = True
-        for f in file_list:
+        for f in file_list[0,1]:
 
           with RPN(f) as r:
 
@@ -203,21 +203,23 @@ def main():
 
             # add the other variables in the next version
 
+          tt_i = np.array(tt_i)
+          uv_i = np.array(uv_i)
           #tt_i = interpData(data_gz_tt[:,:,i,j], height, data_tt[:,:,i,j])
 
-          print(tt_i[0])
-          print(data_tt[0,:,i,j])
+          print(tt_i.shape)
+          print(data_tt[0,:,i,j].shape)
 
           df1 = pd.DataFrame(data=tt_i, columns=height)
           
           df1 = df1.assign(Dates=dates)
           
           # change the path
-          df1.to_csv("{0}/CSV_RCP/{5}/{4}/{1}_{2}{3:02d}_neg.csv".format(folder, name, year, month, year, exp))
+          df1.to_csv("teste.csv")
 
           df1 = pd.DataFrame(data=uv_i, columns=height)
           df1 = df1.assign(Dates=dates)
-          df1 = df1.to_csv()
+          df1.to_csv("teste_vv.csv")
             
           sys.exit()
 
@@ -257,8 +259,9 @@ def interpData(levels, new_levels, data, interp='linear'):
 
   f = interpolate.interp1d(levels, data, kind=interp)
 
-  for level in range(new_val.shape[0]):
-    new_val[level] = f(new_levels[level])
+  new_val = f(new_levels)
+  #for level in range(new_val.shape[0]):
+  #  new_val[level] = f(new_levels[level])
 
   return new_val
 

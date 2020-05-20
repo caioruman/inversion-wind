@@ -160,12 +160,36 @@ def interpPressure(levels, new_levels, data, interp='linear'):
     data: Original variable to be interpolated to custom pressure level
     returns: new_val, the original variable interpolated.
     """
-    new_val = np.zeros_like(new_levels)
+    # Trying interpolate 3d
+    from scipy import interpolate
+    import numpy as np
 
-    f = interpolate.interp1d(levels, data, kind=interp)
+    temp = np.zeros([21,2,2])
+    height = np.zeros([21,2,2])
+    height_new = np.zeros([10,2,2])
+    temp_new = np.zeros_like(height_new)
 
-    for level in range(new_val.shape[0]):
-        new_val[level] = f(new_levels[level])
+    # populating the test arrays
+    f = True
+    for i in range(0,2):
+        for j in range(0,2):
+            temp[:,i,j] = np.linspace(25+(i+j),0+(i+j),21)
+            if (i != j):
+                if f:
+                    aux = 8
+                    f = False
+                else:
+                    aux = 9
+            else:
+                aux = (i+j)*5
+            height[:,i,j] = np.linspace(0,300+aux,21)
+            height_new[:,i,j] = np.linspace(0,300,10)
+
+    # Going back to looping throught the grid to inteprolate :(
+    for i in range(0,2):
+        for j in range(0,2):
+            f = interpolate.interp1d(height[:,i,j], temp[:,i,j], kind='linear')
+            temp_new[:,i,j] = f(height_new[:,i,j])
 
     return new_val
 
