@@ -105,12 +105,8 @@ def main():
         file_list = glob(file_gem)
         file_list.sort()
 
-        ff = []
-        ff.append(file_list[2])
-        ff.append(file_list[3])
-
         ini = True
-        for f in ff:
+        for f in file_list:
 
           print(f)
 
@@ -235,13 +231,13 @@ def main():
           df1 = df1.assign(Dates=dates)
           
           # change the path
-          df1.to_csv("teste.csv")
+          df1.to_csv("CSV/temp_{0}_{1}_{2:02d}.csv".format(stnames, year, month))
 
           df1 = pd.DataFrame(data=uv_i, columns=height)
           df1 = df1.assign(Dates=dates)
-          df1.to_csv("teste_vv.csv")
+          df1.to_csv("CSV/wind_{0}_{1}_{2:02d}.csv".format(stnames, year, month))
             
-          sys.exit()
+          #sys.exit()
 
 def geo_idx(dd, dd_array, type="lat"):
   '''
