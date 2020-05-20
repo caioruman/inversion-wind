@@ -80,7 +80,7 @@ def main():
 
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240]
-  height: [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40, 30]
+  height: [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 2]
 
   # read the ME field
   geo = "/home/poitras/projects/rrg-sushama-ab/poitras/data/CRCM5/Geophys/geophy_cPanCan_011deg_675x540_30south/Gem_geophy.fst"
@@ -89,9 +89,7 @@ def main():
     me = np.squeeze(r.variables["ME"][:])
 
   # Removing the free area
-  new_me = me[32:-32,32:-32]
-  print(new_me.shape)
-  sys.exit()
+  me = me[32:-32,32:-32]
 
   for per in period:
 
@@ -217,6 +215,8 @@ def main():
 
           tt_i = []
           uv_i = []
+          print("height at {0},{1}".format(i, j))
+          print(me[i,j])
           for t, dd in enumerate(dates, 0):
             tt_i.append(interpData(data_gz_tt[t,:,i,j], height, data_tt[t,:,i,j]))
             uv_i.append(interpData(data_gz_uu[t,:,i,j], height, data_uv[t,:,i,j]))
