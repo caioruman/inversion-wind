@@ -26,6 +26,7 @@ Read the dm files from the Samples folder of the simulations.
 
 For each variable, read the vertical profile and transform it into levels that will be more usefull:
 - height: [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
+- height: [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 2]
 
 Estimate the pressure for each level;
 Estimate the density for each level;
@@ -77,8 +78,20 @@ def main():
   period = ["DJF", "JJA"]
   period = ["DJF"]
 
-  height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
-  height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240]
+  #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
+  #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240]
+  height: [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40, 30]
+
+  # read the ME field
+  geo = "/home/poitras/projects/rrg-sushama-ab/poitras/data/CRCM5/Geophys/geophy_cPanCan_011deg_675x540_30south/Gem_geophy.fst"
+
+  with RPN(geo) as r:
+    me = np.squeeze(r.variables["ME"][:])
+
+  # Removing the free area
+  new_me = me[32:-32,32:-32]
+  print(new_me.shape)
+  sys.exit()
 
   for per in period:
 
