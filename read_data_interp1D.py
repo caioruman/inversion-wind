@@ -94,7 +94,7 @@ def main():
         file_list.sort()
 
         ini = True
-        for f in file_list[0,1]:
+        for f in file_list[0]:
 
           with RPN(f) as r:
 
