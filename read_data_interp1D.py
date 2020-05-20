@@ -277,7 +277,6 @@ def interpData(levels, new_levels, data, interp='linear'):
   """
   #new_val = np.zeros_like(new_levels)
 
-  
   f = interpolate.interp1d(levels, data, kind=interp)
 
   try:
