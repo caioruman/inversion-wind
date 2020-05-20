@@ -93,8 +93,14 @@ def main():
         file_list = glob(file_gem)
         file_list.sort()
 
+        ff = []
+        ff.append(file_list[2])
+        ff.append(file_list[3])
+
         ini = True
-        for f in file_list[0]:
+        for f in ff:
+
+          print(f)
 
           with RPN(f) as r:
 
