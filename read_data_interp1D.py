@@ -165,6 +165,8 @@ def main():
               data_mslp = mslp
               data_gz_tt = gz_tt
               data_gz_uu = gz_uu
+              data_tt_0 = tt_0
+              data_uv_0 = uv_0
 
               dates = [str(d) for d in aux.sorted_dates]
 
@@ -178,6 +180,8 @@ def main():
               data_mslp = np.vstack( (data_mslp, mslp) )
               data_gz_tt = np.vstack( (data_gz_tt, gz_tt) )
               data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
+              data_tt_0 = np.vstack( (data_tt_0, tt_0) )
+              data_uv_0 = np.vstack( (data_uv_0, uv_0) )
 
               dates += [str(d) for d in aux.sorted_dates]
         
@@ -229,13 +233,15 @@ def main():
           df1 = pd.DataFrame(data=tt_i, columns=height)
           
           df1 = df1.assign(Dates=dates)
+          df1 = df1.assign(TT0=data_tt_0[:,i,j])
           
           # change the path
-          df1.to_csv("CSV/temp_{0}_{1}_{2:02d}.csv".format(stnames, year, month))
+          df1.to_csv("CSV/temp_{0}_{1}_{2:02d}.csv".format(name, year, month))
 
           df1 = pd.DataFrame(data=uv_i, columns=height)
           df1 = df1.assign(Dates=dates)
-          df1.to_csv("CSV/wind_{0}_{1}_{2:02d}.csv".format(stnames, year, month))
+          df1 = df1.assign(UV0=data_uv_0[:,i,j])
+          df1.to_csv("CSV/wind_{0}_{1}_{2:02d}.csv".format(name, year, month))
             
           #sys.exit()
 
