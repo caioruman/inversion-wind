@@ -186,6 +186,8 @@ def main():
               data_uv_0 = np.vstack( (data_uv_0, uv_0) )
 
               dates += [str(d) for d in aux.sorted_dates]
+
+            continue
         
         print("Initiating calculations on pre-selected locations")
         for lat, lon, name in zip(lats, lons, stnames):
@@ -211,6 +213,8 @@ def main():
           pho = p/(Rd*Tv)
           pho_0 = mslp[:,:,i,j]/(Rd*Tv_0)
 
+          print(pho_0.shape)
+          sys.exit()
           # interpolate values to nice levels
           #for dd, i in enumerate(dates):
 
@@ -256,7 +260,7 @@ def main():
           # density interpolated 
           df1 = pd.DataFrame(data=pho_i, columns=height)
           df1 = df1.assign(Dates=dates)
-          df1 = df1.assign(PHO0=pho_0[:,i,j])
+          df1 = df1.assign(PHO0=pho_0[i,j])
           df1.to_csv("CSV/{3}_density_{0}_{1}_{2:02d}.csv".format(name, year, month, exp))
             
           sys.exit()
