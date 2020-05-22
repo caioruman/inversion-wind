@@ -154,7 +154,9 @@ def main():
             #vv_0 = vv[:,-1,:,:]
             #vv = vv[:,:-1,:,:]
 
-            mslp = r.variables['PN'][:]
+            mslp = np.squeeze(r.variables['PN'][:])
+            #print(mslp.shape)
+            #sys.exit()
             aux = r.variables['PN']
             
             if ini:
@@ -187,7 +189,7 @@ def main():
 
               dates += [str(d) for d in aux.sorted_dates]
 
-            continue
+            break
         
         print("Initiating calculations on pre-selected locations")
         for lat, lon, name in zip(lats, lons, stnames):
@@ -206,15 +208,17 @@ def main():
           # at sea level, z1 = 0 and p1 = mslp
           # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
           # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
+          mslp_a = np.zeros_like(data_gz_tt[:,:,i,j])
+          for t in range(mslp_a.shape[1]):
+              mslp_a[:,t] = data_mslp[:,i,j]
+#          mslp_a += data_mslp[:,i,j]
 
-          p = data_mslp[:,:,i,j]/(np.exp(data_gz_tt[:,:,i,j]*g/(Rd*Tv)))
+          p = mslp_a/(np.exp(data_gz_tt[:,:,i,j]*g/(Rd*Tv)))
 
             # estimating the air density
           pho = p/(Rd*Tv)
-          pho_0 = mslp[:,:,i,j]/(Rd*Tv_0)
+          pho_0 = data_mslp[:,i,j]/(Rd*Tv_0)
 
-          print(pho_0.shape)
-          sys.exit()
           # interpolate values to nice levels
           #for dd, i in enumerate(dates):
 
@@ -260,10 +264,10 @@ def main():
           # density interpolated 
           df1 = pd.DataFrame(data=pho_i, columns=height)
           df1 = df1.assign(Dates=dates)
-          df1 = df1.assign(PHO0=pho_0[i,j])
+          df1 = df1.assign(PHO0=pho_0)
           df1.to_csv("CSV/{3}_density_{0}_{1}_{2:02d}.csv".format(name, year, month, exp))
             
-          sys.exit()
+          #sys.exit()
 
 def geo_idx(dd, dd_array, type="lat"):
   '''
