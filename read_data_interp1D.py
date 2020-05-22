@@ -8,16 +8,18 @@ import numpy.ma as ma
 from glob import glob
 from datetime import date, datetime, timedelta
 
-import matplotlib.pyplot as plt
-import matplotlib as mpl # in python
+#import matplotlib.pyplot as plt
+#import matplotlib as mpl # in python
 from matplotlib.colors import BoundaryNorm
 #from mpl_toolkits.basemap import Basemap
 #from mpl_toolkits.basemap import maskoceans
-from netCDF4 import Dataset
+#from netCDF4 import Dataset
 from scipy import interpolate
 
 from rpn.rpn import RPN
 from rpn.domains.rotated_lat_lon import RotatedLatLon
+
+import argparse
 
 
 '''
@@ -42,9 +44,20 @@ for later:
 
 '''
 
+parser=argparse.ArgumentParser(description='Read data from the 10km simulations', formatter_class=argparse.RawTextHelpFormatter)
+#parser.add_argument("-op", "--opt-arg", type=str, dest='opcional', help="Algum argumento opcional no programa", default=False)
+parser.add_argument("anoi", type=int, help="Ano", default=0)
+parser.add_argument("anof", type=int, help="Anof", default=0)
+parser.add_argument("exp", type=str, help="exp", default=0)
+args=parser.parse_args()
+
+datai = args.anoi
+dataf = args.anof
+exp = args.exp
+
 def main():
-  datai = 1989
-  dataf = 1990
+  #datai = 1989
+  #dataf = 1990
 
     # constants
   Rd = 287  # Gas constant of dry air
@@ -64,7 +77,7 @@ def main():
 
   stations.close()
   # simulation
-  exp = "cPanCan_011deg_675x540_SPN_ERA5_90lvl"
+  #exp = "cPanCan_011deg_675x540_SPN_ERA5_90lvl"
   #exp = "cPanCan_011deg_675x540_SPN_ERA5_80lvl"
   #exp = "cPanCan_011deg_675x540_SPN_CanESM2_histo_r1i1p1_90lvl"
 
