@@ -274,7 +274,7 @@ def main():
           df1 = pd.DataFrame(data=uv_i, columns=height)
           df1 = df1.assign(Dates=dates)
           df1 = df1.assign(UV0=data_uv_0[:,i,j])
-          df1 = df1.assign(UV_M0=data_uv[:,-1,i,j]
+          df1 = df1.assign(UV_M0=data_uv[:,-1,i,j])
           df1 = df1.assign(GZ_M0=data_gz_uu[:,-1,i,j])
           df1.to_csv("CSV/{3}_wind_{0}_{1}_{2:02d}_v2.csv".format(name, year, month, exp))
 
