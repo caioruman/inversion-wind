@@ -119,88 +119,97 @@ def main():
         file_list.sort()
 
         ini = True
+        data_uv = []
+        data_tt = []
+        data_hu = []
+        data_mslp = []
+        data_gz_tt = []
+        data_gz_uu = []
+        data_tt_0 = []
+        data_uv_0 = []
         print("Month: {0}; Year: {1}".format(month, year))
         for f in file_list:
 
           print(f)
 
-          with RPN(f) as r:
+          r = RPN(f)
 
-            # position of elements: (time, z, x, y)
-            # top altitude is the 0 array index
-            gz = r.variables['GZ'][:]
-            # [...0.982782, 0.988501, 0.994254, 0.997123, 1]
-            # [...,gz_uu, gz_tt, gz_uu, gz_tt, surface]
+          # position of elements: (time, z, x, y)
+          # top altitude is the 0 array index
+          gz = r.variables['GZ'][:]
+          # [...0.982782, 0.988501, 0.994254, 0.997123, 1]
+          # [...,gz_uu, gz_tt, gz_uu, gz_tt, surface]
 
-            tt = r.variables['TT'][:]
-            # [..., 0.988501, 0.997123, 1.5]
+          tt = r.variables['TT'][:]
+          # [..., 0.988501, 0.997123, 1.5]
 
-            uu = r.variables['UU'][:]
-            vv = r.variables['VV'][:]
-            # [..., 0.982782, 0.994254, 10m]
+          uu = r.variables['UU'][:]
+          vv = r.variables['VV'][:]
+          # [..., 0.982782, 0.994254, 10m]
 
-            hu = r.variables['HU'][:] # specific humidity
+          hu = r.variables['HU'][:] # specific humidity
 
-            gz_0 = gz[:,-1,:,:]
+          gz_0 = gz[:,-1,:,:]
 
-            # removing the last level (surface)
-            gz = gz[:,:-1,:,:]
+          # removing the last level (surface)
+          gz = gz[:,:-1,:,:]
 
-            # spliting between tt/hu and uu levels
-            gz_tt = gz[:,1::2,:,:]
-            gz_uu = gz[:,::2,:,:]
+          # spliting between tt/hu and uu levels
+          gz_tt = gz[:,1::2,:,:]
+          gz_uu = gz[:,::2,:,:]
 
-            tt_0 = tt[:,-1,:,:]+273.15
-            tt = tt[:,:-1,:,:]+273.15
+          tt_0 = tt[:,-1,:,:]+273.15
+          tt = tt[:,:-1,:,:]+273.15
 
-            hu_0 = hu[:,-1,:,:]
-            hu = hu[:,:-1,:,:]
+          hu_0 = hu[:,-1,:,:]
+          hu = hu[:,:-1,:,:]
 
-            # converting to m/s from knots
-            uv = np.sqrt(np.power(uu,2) + np.power(vv,2))/1.944
-            uv_0 = uv[:,-1,:,:]
-            uv = uv[:,:-1,:,:]
+          # converting to m/s from knots
+          uv = np.sqrt(np.power(uu,2) + np.power(vv,2))/1.944
+          uv_0 = uv[:,-1,:,:]
+          uv = uv[:,:-1,:,:]
 
-            #uu_0 = uu[:,-1,:,:]
-            #uu = uu[:,:-1,:,:]
+          #uu_0 = uu[:,-1,:,:]
+          #uu = uu[:,:-1,:,:]
 
-            #vv_0 = vv[:,-1,:,:]
-            #vv = vv[:,:-1,:,:]
+          #vv_0 = vv[:,-1,:,:]
+          #vv = vv[:,:-1,:,:]
 
-            mslp = np.squeeze(r.variables['PN'][:])
-            #print(mslp.shape)
-            #sys.exit()
-            aux = r.variables['PN']
-            
-            if ini:
-              ini = False
-              #data_uu = uu
-              #data_vv = vv
-              data_uv = uv
-              data_tt = tt
-              data_hu = hu
-              data_mslp = mslp
-              data_gz_tt = gz_tt
-              data_gz_uu = gz_uu
-              data_tt_0 = tt_0
-              data_uv_0 = uv_0
+          mslp = np.squeeze(r.variables['PN'][:])
+          #print(mslp.shape)
+          #sys.exit()
+          aux = r.variables['PN']          
+          
+          if ini:
+            ini = False
+            #data_uu = uu
+            #data_vv = vv
+            data_uv = uv
+            data_tt = tt
+            data_hu = hu
+            data_mslp = mslp
+            data_gz_tt = gz_tt
+            data_gz_uu = gz_uu
+            data_tt_0 = tt_0
+            data_uv_0 = uv_0
 
-              dates = [str(d) for d in aux.sorted_dates]
+            dates = [str(d) for d in aux.sorted_dates]
 
-              lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
-            else:
-              #data_uu = np.vstack( (data_uu, uu) )
-              #data_vv = np.vstack( (data_vv, vv) )
-              data_uv = np.vstack( (data_uv, uv) )
-              data_tt = np.vstack( (data_tt, tt) )
-              data_hu = np.vstack( (data_hu, hu) )
-              data_mslp = np.vstack( (data_mslp, mslp) )
-              data_gz_tt = np.vstack( (data_gz_tt, gz_tt) )
-              data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
-              data_tt_0 = np.vstack( (data_tt_0, tt_0) )
-              data_uv_0 = np.vstack( (data_uv_0, uv_0) )
+            lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
+          else:
+            #data_uu = np.vstack( (data_uu, uu) )
+            #data_vv = np.vstack( (data_vv, vv) )
+            data_uv = np.vstack( (data_uv, uv) )
+            data_tt = np.vstack( (data_tt, tt) )
+            data_hu = np.vstack( (data_hu, hu) )
+            data_mslp = np.vstack( (data_mslp, mslp) )
+            data_gz_tt = np.vstack( (data_gz_tt, gz_tt) )
+            data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
+            data_tt_0 = np.vstack( (data_tt_0, tt_0) )
+            data_uv_0 = np.vstack( (data_uv_0, uv_0) )
 
-              dates += [str(d) for d in aux.sorted_dates]
+            dates += [str(d) for d in aux.sorted_dates]
+          r.close()
 
             
         
