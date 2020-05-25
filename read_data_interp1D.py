@@ -89,8 +89,8 @@ def main():
   period = ["DJF", "JJA", 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
   period = ["DJF", "JJA", "SON", "MAM"] #, "JFM", "JAS"]
   period = ["DJF", "JJA"]
-  period = ["DJF"]
-
+#  period = ["DJF"]
+#  period = ["JJA"]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240]
   height = [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40]
@@ -202,7 +202,7 @@ def main():
 
               dates += [str(d) for d in aux.sorted_dates]
 
-            break
+            
         
         print("Initiating calculations on pre-selected locations")
         for lat, lon, name in zip(lats, lons, stnames):
