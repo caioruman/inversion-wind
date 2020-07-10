@@ -230,7 +230,7 @@ def main():
             i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
 
             dirName = 'CSV/{0}'.format(name)
-            if not os.path.exists(dirName)
+            if not os.path.exists(dirName):
               os.mkdir(dirName)
 
           # Virtual Temperature
