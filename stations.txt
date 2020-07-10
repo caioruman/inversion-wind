@@ -32,4 +32,3 @@
 71909;00000_Iqaluit_NU;latitude;63.747;longitude;-68.52;altitude;22
 00000;00000_Sachs_Harbour;latitude;71.986;longitude;-125.237;altitude;6
 00000;00000_Yellowknife_NT;latitude;62.502;longitude;-114.349;altitude;200
-

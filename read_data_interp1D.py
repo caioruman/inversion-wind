@@ -18,7 +18,7 @@ from scipy import interpolate
 
 from rpn.rpn import RPN
 from rpn.domains.rotated_lat_lon import RotatedLatLon
-
+import os
 import argparse
 
 
@@ -69,9 +69,14 @@ def main():
   lons = []
   stnames = []
 
+  dirName = 'CSV/{0}'.format(exp)
+  if not os.path.exists(dirName):
+    os.mkdir(dirName)
+
   stations = open('stations.txt', 'r')
   for line in stations:
     aa = line.replace("\n", '').split(';')
+    print(aa)
     if (aa[0] != "#"):      
       lats.append(float(aa[3]))
       lons.append(float(aa[5]))
@@ -229,7 +234,7 @@ def main():
           for lat, lon, name in zip(lats, lons, stnames):
             i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
 
-            dirName = 'CSV/{0}'.format(name)
+            dirName = 'CSV/{0}/{1}'.format(exp, name)
             if not os.path.exists(dirName):
               os.mkdir(dirName)
 
