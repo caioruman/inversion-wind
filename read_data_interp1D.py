@@ -83,8 +83,8 @@ def main():
   #exp = "cPanCan_011deg_675x540_SPN_ERA5_80lvl"
   #exp = "cPanCan_011deg_675x540_SPN_CanESM2_histo_r1i1p1_90lvl"
 
-  folder = "{1}/{0}".format(exp, ff)
-  #folder = "/home/cruman/projects/rrg-sushama-ab/cruman/storage_model/Output/{0}".format(exp)
+  #folder = "{1}/{0}".format(exp, ff)
+  folder = "/home/cruman/projects/rrg-sushama-ab/{1}/storage_model/Output/{0}".format(exp, ff)
 
   # Sounding Data
   #sounding_file = "/home/cruman/project/cruman/Scripts/soundings/inv_list_DJF.dat"
