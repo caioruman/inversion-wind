@@ -229,6 +229,10 @@ def main():
           for lat, lon, name in zip(lats, lons, stnames):
             i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
 
+            dirName = 'CSV/{0}'.format(name)
+            if not os.path.exists(dirName)
+              os.mkdir(dirName)
+
           # Virtual Temperature
           # Tv ~ T*(1 + 0.61*w)
           # Tv ~ T*(1 + 0.61*(hu/(1-hu)))
@@ -283,22 +287,22 @@ def main():
           # temperature non-interpolated
             df1 = pd.DataFrame(data=data_tt[:,:,i,j], columns=level)
             df1 = df1.assign(Dates=dates)
-            df1.to_csv("CSV/{3}_temp_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+            df1.to_csv("CSV/{0}/{3}_temp_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
 
             # Wind non-interpolated
             df1 = pd.DataFrame(data=data_uv[:,:,i,j], columns=level)
             df1 = df1.assign(Dates=dates)
-            df1.to_csv("CSV/{3}_wind_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+            df1.to_csv("CSV/{0}/{3}_wind_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
 
             # GZ non-interpolated
             df1 = pd.DataFrame(data=data_gz_tt[:,:,i,j], columns=level)
             df1 = df1.assign(Dates=dates)
-            df1.to_csv("CSV/{3}_gz_tt_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+            df1.to_csv("CSV/{0}/{3}_gz_tt_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
 
             # GZ non-interpolated
             df1 = pd.DataFrame(data=data_gz_uu[:,:,i,j], columns=level)
             df1 = df1.assign(Dates=dates)
-            df1.to_csv("CSV/{3}_gz_uu_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+            df1.to_csv("CSV/{0}/{3}_gz_uu_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
 
           ###########
           # the interpolation was garbage near the surface
