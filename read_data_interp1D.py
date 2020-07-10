@@ -49,11 +49,13 @@ parser=argparse.ArgumentParser(description='Read data from the 10km simulations'
 parser.add_argument("anoi", type=int, help="Ano", default=0)
 parser.add_argument("anof", type=int, help="Anof", default=0)
 parser.add_argument("exp", type=str, help="exp", default=0)
+parser.add_argument("folder", type=str, help="exp", default=0)
 args=parser.parse_args()
 
 datai = args.anoi
 dataf = args.anof
 exp = args.exp
+ff = args.folder
 
 def main():
   #datai = 1989
@@ -81,39 +83,35 @@ def main():
   #exp = "cPanCan_011deg_675x540_SPN_ERA5_80lvl"
   #exp = "cPanCan_011deg_675x540_SPN_CanESM2_histo_r1i1p1_90lvl"
 
-  folder = "/home/cruman/projects/rrg-sushama-ab/cruman/storage_model/Output/{0}".format(exp)
+  folder = "{1}/{0}".format(exp, ff)
+  #folder = "/home/cruman/projects/rrg-sushama-ab/cruman/storage_model/Output/{0}".format(exp)
 
   # Sounding Data
   #sounding_file = "/home/cruman/project/cruman/Scripts/soundings/inv_list_DJF.dat"
 
   period = ["DJF", "JJA", 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
   period = ["DJF", "JJA", "SON", "MAM"] #, "JFM", "JAS"]
-  period = ["DJF", "JJA"]
+  #period = ["DJF", "JJA"]
 #  period = ["Aug"]
 #  period = ["JJA"]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240]
   height = [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40]
 
-  if exp == 'cPanCan_011deg_675x540_SPN_ERA5_90lvl':
+  if "90lvl" in exp: #exp == 'cPanCan_011deg_675x540_SPN_ERA5_90lvl':
 #    level = [0.283293, 0.304369, 0.326386, 0.349359989, 0.373212993, 0.398155004, 
-    level  = [ 0.398155,
-              0.424010, 0.450794, 0.478525, 0.507218, 0.536786, 0.567246, 0.598609,
-              0.630894, 0.663900, 0.697210, 0.728878, 0.758965,
-              0.787205, 0.813775, 0.838635, 0.861860, 0.883424,
-              0.903409, 0.922016, 0.939116, 0.954913, 0.969398,
-              0.982782, 0.994253]
-    level1 = [0.283293, 0.304369, 0.326386, 0.349359989, 0.373212993, 0.398155004,
-              0.424010, 0.450794, 0.478525, 0.507218, 0.536786, 0.567246, 0.598609,
-              0.630894, 0.663900, 0.697210, 0.728878, 0.758965,
-              0.787205, 0.813775, 0.838635, 0.861860, 0.883424,
-              0.903409, 0.922016, 0.939116, 0.954913, 0.969398,
-              0.982782, 0.994253]
+    #level = [0.515000,0.543000,0.573000,0.605000,0.640900,
+    # bottom 20 levels
+    level = [0.6799,0.7162,0.7496,0.7799,0.8070,
+             0.8310,0.8521,0.8704,0.8865,0.9004,
+             0.9125,0.9231,0.9325,0.9408,0.9483,
+             0.9552,0.9614,0.9673,0.9727,0.9780,
+             0.9825,0.9864,0.9903,0.9942,0.9980]
   else:
-    level = [0.5453, 0.575564981, 0.6070     , 0.639265001, 0.671959996, 0.704868972,
-              0.735844016, 0.765922010, 0.792918026, 0.818956017, 0.844021022,
-              0.865904987, 0.886768997, 0.906602025, 0.924284995, 0.940909982,
-              0.956465006, 0.970943987, 0.983220994, 0.994401991]
+    level = [0.5453, 0.5755, 0.6070, 0.6392, 0.6719, 
+             0.7048, 0.7358, 0.7659, 0.7929, 0.8189, 
+             0.8440, 0.8659, 0.8867, 0.9066, 0.9242, 
+             0.9409, 0.9564, 0.9709, 0.9832, 0.9944]
 
   # read the ME field
   #geo = "/home/poitras/projects/rrg-sushama-ab/poitras/data/CRCM5/Geophys/geophy_cPanCan_011deg_675x540_30south/Gem_geophy.fst"
@@ -302,30 +300,33 @@ def main():
             df1 = df1.assign(Dates=dates)
             df1.to_csv("CSV/{3}_gz_uu_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
 
+          ###########
+          # the interpolation was garbage near the surface
+          ###########
           # temperature interpolated 
-            df1 = pd.DataFrame(data=tt_i, columns=height)
+          #  df1 = pd.DataFrame(data=tt_i, columns=height)
           
-            df1 = df1.assign(Dates=dates)
-            df1 = df1.assign(TT0=data_tt_0[:,i,j])
-            df1 = df1.assign(TT_M0=data_tt[:,-1,i,j])
-            df1 = df1.assign(GZ_M0=data_gz_tt[:,-1,i,j])
+          #  df1 = df1.assign(Dates=dates)
+          #  df1 = df1.assign(TT0=data_tt_0[:,i,j])
+          #  df1 = df1.assign(TT_M0=data_tt[:,-1,i,j])
+          #  df1 = df1.assign(GZ_M0=data_gz_tt[:,-1,i,j])
           
           # change the path
-            df1.to_csv("CSV/{3}_temp_{0}_{1}_{2:02d}_{4:02d}_v2.csv".format(name, year, month, exp, idx))
+          #  df1.to_csv("CSV/{3}_temp_{0}_{1}_{2:02d}_{4:02d}_v2.csv".format(name, year, month, exp, idx))
           
           # wind interpolated 
-            df1 = pd.DataFrame(data=uv_i, columns=height)
-            df1 = df1.assign(Dates=dates)
-            df1 = df1.assign(UV0=data_uv_0[:,i,j])
-            df1 = df1.assign(UV_M0=data_uv[:,-1,i,j])
-            df1 = df1.assign(GZ_M0=data_gz_uu[:,-1,i,j])
-            df1.to_csv("CSV/{3}_wind_{0}_{1}_{2:02d}_{4:02d}_v2.csv".format(name, year, month, exp, idx))
+          #  df1 = pd.DataFrame(data=uv_i, columns=height)
+          # df1 = df1.assign(Dates=dates)
+          #  df1 = df1.assign(UV0=data_uv_0[:,i,j])
+          #  df1 = df1.assign(UV_M0=data_uv[:,-1,i,j])
+          #  df1 = df1.assign(GZ_M0=data_gz_uu[:,-1,i,j])
+          #  df1.to_csv("CSV/{3}_wind_{0}_{1}_{2:02d}_{4:02d}_v2.csv".format(name, year, month, exp, idx))
 
           # density interpolated 
-            df1 = pd.DataFrame(data=pho_i, columns=height)
-            df1 = df1.assign(Dates=dates)
-            df1 = df1.assign(PHO0=pho_0)
-            df1.to_csv("CSV/{3}_density_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+          #  df1 = pd.DataFrame(data=pho_i, columns=height)
+          #  df1 = df1.assign(Dates=dates)
+          #  df1 = df1.assign(PHO0=pho_0)
+          #  df1.to_csv("CSV/{3}_density_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
             
           #sys.exit()
 

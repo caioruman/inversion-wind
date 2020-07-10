@@ -29,5 +29,7 @@
 #;71945;71945__Fort_Nelson,_BC_YYE;latitude;58.83;longitude;-122.59
 71957;71957__Inuvik,_NT_YEV;latitude;68.30;longitude;-133.52;altitude;103
 #;72797;72797__Quillayute,_WA_UIL;latitude;47.95;longitude;-124.55
-#;71909;00000_Iqaluit_NU;latitude;63.747;longitude;-68.52;altitude;22
-#;00000;00000_Sachs_Harbour;latitude;71.986;longitude;-125.237;altitude;6
+71909;00000_Iqaluit_NU;latitude;63.747;longitude;-68.52;altitude;22
+00000;00000_Sachs_Harbour;latitude;71.986;longitude;-125.237;altitude;6
+00000;00000_Yellowknife_NT;latitude;62.502;longitude;-114.349;altitude;200
+
