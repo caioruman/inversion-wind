@@ -89,11 +89,31 @@ def main():
   period = ["DJF", "JJA", 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Nov', 'Dec']
   period = ["DJF", "JJA", "SON", "MAM"] #, "JFM", "JAS"]
   period = ["DJF", "JJA"]
-#  period = ["DJF"]
+#  period = ["Aug"]
 #  period = ["JJA"]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]
   #height = [2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240]
   height = [300, 280, 260, 240, 220, 200, 180, 160, 140, 120, 100, 90, 80, 70, 60, 50, 40]
+
+  if exp == 'cPanCan_011deg_675x540_SPN_ERA5_90lvl':
+#    level = [0.283293, 0.304369, 0.326386, 0.349359989, 0.373212993, 0.398155004, 
+    level  = [ 0.398155,
+              0.424010, 0.450794, 0.478525, 0.507218, 0.536786, 0.567246, 0.598609,
+              0.630894, 0.663900, 0.697210, 0.728878, 0.758965,
+              0.787205, 0.813775, 0.838635, 0.861860, 0.883424,
+              0.903409, 0.922016, 0.939116, 0.954913, 0.969398,
+              0.982782, 0.994253]
+    level1 = [0.283293, 0.304369, 0.326386, 0.349359989, 0.373212993, 0.398155004,
+              0.424010, 0.450794, 0.478525, 0.507218, 0.536786, 0.567246, 0.598609,
+              0.630894, 0.663900, 0.697210, 0.728878, 0.758965,
+              0.787205, 0.813775, 0.838635, 0.861860, 0.883424,
+              0.903409, 0.922016, 0.939116, 0.954913, 0.969398,
+              0.982782, 0.994253]
+  else:
+    level = [0.5453, 0.575564981, 0.6070     , 0.639265001, 0.671959996, 0.704868972,
+              0.735844016, 0.765922010, 0.792918026, 0.818956017, 0.844021022,
+              0.865904987, 0.886768997, 0.906602025, 0.924284995, 0.940909982,
+              0.956465006, 0.970943987, 0.983220994, 0.994401991]
 
   # read the ME field
   #geo = "/home/poitras/projects/rrg-sushama-ab/poitras/data/CRCM5/Geophys/geophy_cPanCan_011deg_675x540_30south/Gem_geophy.fst"
@@ -119,17 +139,11 @@ def main():
         file_list.sort()
 
         ini = True
-        data_uv = []
-        data_tt = []
-        data_hu = []
-        data_mslp = []
-        data_gz_tt = []
-        data_gz_uu = []
-        data_tt_0 = []
-        data_uv_0 = []
         print("Month: {0}; Year: {1}".format(month, year))
+        idx = 0
         for f in file_list:
-
+          ini = True
+          idx += 1
           print(f)
 
           r = RPN(f)
@@ -180,118 +194,138 @@ def main():
           #sys.exit()
           aux = r.variables['PN']          
           
-          if ini:
-            ini = False
+          #if ini:
+          #  ini = False
             #data_uu = uu
             #data_vv = vv
-            data_uv = uv
-            data_tt = tt
-            data_hu = hu
-            data_mslp = mslp
-            data_gz_tt = gz_tt
-            data_gz_uu = gz_uu
-            data_tt_0 = tt_0
-            data_uv_0 = uv_0
+          data_uv = uv
+          data_tt = tt
+          data_hu = hu
+          data_mslp = mslp
+          data_gz_tt = gz_tt
+          data_gz_uu = gz_uu
+          data_tt_0 = tt_0
+          data_uv_0 = uv_0
 
-            dates = [str(d) for d in aux.sorted_dates]
+          dates = [str(d) for d in aux.sorted_dates]
 
-            lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
-          else:
+          lons2d, lats2d = r.get_longitudes_and_latitudes_for_the_last_read_rec()
+          #else:
             #data_uu = np.vstack( (data_uu, uu) )
             #data_vv = np.vstack( (data_vv, vv) )
-            data_uv = np.vstack( (data_uv, uv) )
-            data_tt = np.vstack( (data_tt, tt) )
-            data_hu = np.vstack( (data_hu, hu) )
-            data_mslp = np.vstack( (data_mslp, mslp) )
-            data_gz_tt = np.vstack( (data_gz_tt, gz_tt) )
-            data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
-            data_tt_0 = np.vstack( (data_tt_0, tt_0) )
-            data_uv_0 = np.vstack( (data_uv_0, uv_0) )
+          #  data_uv = np.vstack( (data_uv, uv) )
+          #  data_tt = np.vstack( (data_tt, tt) )
+          #  data_hu = np.vstack( (data_hu, hu) )
+          #  data_mslp = np.vstack( (data_mslp, mslp) )
+          #  data_gz_tt = np.vstack( (data_gz_tt, gz_tt) )
+          #  data_gz_uu = np.vstack( (data_gz_uu, gz_uu) )
+          #  data_tt_0 = np.vstack( (data_tt_0, tt_0) )
+         #   data_uv_0 = np.vstack( (data_uv_0, uv_0) )
 
-            dates += [str(d) for d in aux.sorted_dates]
+          #  dates += [str(d) for d in aux.sorted_dates]
           r.close()
 
             
         
-        print("Initiating calculations on pre-selected locations")
-        for lat, lon, name in zip(lats, lons, stnames):
-          i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
+          print("Initiating calculations on pre-selected locations")
+          for lat, lon, name in zip(lats, lons, stnames):
+            i, j = geo_idx([lat, lon], np.array([lats2d, lons2d]))
 
           # Virtual Temperature
           # Tv ~ T*(1 + 0.61*w)
           # Tv ~ T*(1 + 0.61*(hu/(1-hu)))
 
-          Tv = data_tt[:,:,i,j]*(1 + 0.61*(data_hu[:,:,i,j]/(1-data_hu[:,:,i,j])))
+            Tv = data_tt[:,:,i,j]*(1 + 0.61*(data_hu[:,:,i,j]/(1-data_hu[:,:,i,j])))
 
-          Tv_0 = tt_0[:,i,j]*(1 + 0.61*(hu_0[:,i,j]/(1-hu_0[:,i,j])))
+            Tv_0 = tt_0[:,i,j]*(1 + 0.61*(hu_0[:,i,j]/(1-hu_0[:,i,j])))
 
           # Using the hypsometric equation
           # Z2 - Z1 = (Rd*Tv)*ln(p1/p2)/g
           # at sea level, z1 = 0 and p1 = mslp
           # mslp/p2 = np.exp(Z2*g/(Rd*Tv))
           # p2 = mslp/np.exp(Z2*g/(Rd*Tv))
-          mslp_a = np.zeros_like(data_gz_tt[:,:,i,j])
-          for t in range(mslp_a.shape[1]):
+            mslp_a = np.zeros_like(data_gz_tt[:,:,i,j])
+            for t in range(mslp_a.shape[1]):
               mslp_a[:,t] = data_mslp[:,i,j]
 #          mslp_a += data_mslp[:,i,j]
 
-          p = mslp_a/(np.exp(data_gz_tt[:,:,i,j]*g/(Rd*Tv)))
+            p = mslp_a/(np.exp(data_gz_tt[:,:,i,j]*g/(Rd*Tv)))
 
             # estimating the air density
-          pho = p/(Rd*Tv)
-          pho_0 = data_mslp[:,i,j]/(Rd*Tv_0)
+            pho = p/(Rd*Tv)
+            pho_0 = data_mslp[:,i,j]/(Rd*Tv_0)
 
           # interpolate values to nice levels
           #for dd, i in enumerate(dates):
 
-          """
-          Start checking from here tomorrow
-          """
+            """
+            Start checking from here tomorrow
+            """
 
-          tt_i = []
-          uv_i = []
-          pho_i = []
+            tt_i = []
+            uv_i = []
+            pho_i = []
           #print("height at {0},{1}".format(i, j))
           #print(me[i,j])
-          for t, dd in enumerate(dates, 0):
-            tt_i.append(interpData(data_gz_tt[t,:,i,j], height, data_tt[t,:,i,j]))
-            uv_i.append(interpData(data_gz_uu[t,:,i,j], height, data_uv[t,:,i,j]))
-            pho_i.append(interpData(data_gz_tt[t,:,i,j], height, pho[t,:]))
+            for t, dd in enumerate(dates, 0):
+              tt_i.append(interpData(data_gz_tt[t,:,i,j], height, data_tt[t,:,i,j]))
+              uv_i.append(interpData(data_gz_uu[t,:,i,j], height, data_uv[t,:,i,j]))
+              pho_i.append(interpData(data_gz_tt[t,:,i,j], height, pho[t,:]))
 
             # add the other variables in the next version
 
-          tt_i = np.array(tt_i)
-          uv_i = np.array(uv_i)
-          pho_i = np.array(pho_i)
+            tt_i = np.array(tt_i)
+            uv_i = np.array(uv_i)
+            pho_i = np.array(pho_i)
           #tt_i = interpData(data_gz_tt[:,:,i,j], height, data_tt[:,:,i,j])
 
           #print(tt_i.shape)
           #print(data_tt[0,:,i,j].shape)
 
+          # temperature non-interpolated
+            df1 = pd.DataFrame(data=data_tt[:,:,i,j], columns=level)
+            df1 = df1.assign(Dates=dates)
+            df1.to_csv("CSV/{3}_temp_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+
+            # Wind non-interpolated
+            df1 = pd.DataFrame(data=data_uv[:,:,i,j], columns=level)
+            df1 = df1.assign(Dates=dates)
+            df1.to_csv("CSV/{3}_wind_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+
+            # GZ non-interpolated
+            df1 = pd.DataFrame(data=data_gz_tt[:,:,i,j], columns=level)
+            df1 = df1.assign(Dates=dates)
+            df1.to_csv("CSV/{3}_gz_tt_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+
+            # GZ non-interpolated
+            df1 = pd.DataFrame(data=data_gz_uu[:,:,i,j], columns=level)
+            df1 = df1.assign(Dates=dates)
+            df1.to_csv("CSV/{3}_gz_uu_no-interp_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
+
           # temperature interpolated 
-          df1 = pd.DataFrame(data=tt_i, columns=height)
+            df1 = pd.DataFrame(data=tt_i, columns=height)
           
-          df1 = df1.assign(Dates=dates)
-          df1 = df1.assign(TT0=data_tt_0[:,i,j])
-          df1 = df1.assign(TT_M0=data_tt[:,-1,i,j])
-          df1 = df1.assign(GZ_M0=data_gz_tt[:,-1,i,j])
+            df1 = df1.assign(Dates=dates)
+            df1 = df1.assign(TT0=data_tt_0[:,i,j])
+            df1 = df1.assign(TT_M0=data_tt[:,-1,i,j])
+            df1 = df1.assign(GZ_M0=data_gz_tt[:,-1,i,j])
           
           # change the path
-          df1.to_csv("CSV/{3}_temp_{0}_{1}_{2:02d}_v2.csv".format(name, year, month, exp))
+            df1.to_csv("CSV/{3}_temp_{0}_{1}_{2:02d}_{4:02d}_v2.csv".format(name, year, month, exp, idx))
           
           # wind interpolated 
-          df1 = pd.DataFrame(data=uv_i, columns=height)
-          df1 = df1.assign(Dates=dates)
-          df1 = df1.assign(UV0=data_uv_0[:,i,j])
-          df1 = df1.assign(UV_M0=data_uv[:,-1,i,j])
-          df1 = df1.assign(GZ_M0=data_gz_uu[:,-1,i,j])
-          df1.to_csv("CSV/{3}_wind_{0}_{1}_{2:02d}_v2.csv".format(name, year, month, exp))
+            df1 = pd.DataFrame(data=uv_i, columns=height)
+            df1 = df1.assign(Dates=dates)
+            df1 = df1.assign(UV0=data_uv_0[:,i,j])
+            df1 = df1.assign(UV_M0=data_uv[:,-1,i,j])
+            df1 = df1.assign(GZ_M0=data_gz_uu[:,-1,i,j])
+            df1.to_csv("CSV/{3}_wind_{0}_{1}_{2:02d}_{4:02d}_v2.csv".format(name, year, month, exp, idx))
 
           # density interpolated 
-          df1 = pd.DataFrame(data=pho_i, columns=height)
-          df1 = df1.assign(Dates=dates)
-          df1 = df1.assign(PHO0=pho_0)
-          df1.to_csv("CSV/{3}_density_{0}_{1}_{2:02d}.csv".format(name, year, month, exp))
+            df1 = pd.DataFrame(data=pho_i, columns=height)
+            df1 = df1.assign(Dates=dates)
+            df1 = df1.assign(PHO0=pho_0)
+            df1.to_csv("CSV/{3}_density_{0}_{1}_{2:02d}_{4:02d}.csv".format(name, year, month, exp, idx))
             
           #sys.exit()
 
